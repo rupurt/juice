@@ -31,15 +31,17 @@ defmodule Juice do
     |> reject(acc)
   end
 
-  defp collect([key | []], %{} = source, acc) do
+  defp collect([key | []], source, acc) when is_map(source) do
     sub_source = Map.get(source, key)
     Map.put(acc, key, sub_source)
   end
 
-  defp collect([key | tail], source, acc) do
+  defp collect([key | tail], source, acc) when is_map(source) do
     sub_source = Map.get(source, key)
-    sub_acc = collect(tail, sub_source, acc)
-    Map.put(acc, key, sub_acc)
+    sub_acc = Map.get(acc, key, %{})
+    collected = collect(tail, sub_source, sub_acc)
+
+    Map.put(acc, key, collected)
   end
 
   defp reject([key | []], acc) do

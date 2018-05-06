@@ -7,11 +7,11 @@ defmodule JuiceTest do
       "a" => %{
         "b" => %{"c" => %{"d" => ["A", "B", "C", "D"]}},
         "c" => %{"d" => []},
-        "d" => %{}
+        "d" => []
       },
       "b" => %{
         "c" => %{"d" => []},
-        "d" => %{}
+        "d" => []
       },
       "c" => %{"d" => []},
       "d" => []
@@ -29,11 +29,11 @@ defmodule JuiceTest do
              "a" => %{
                "b" => %{"c" => %{"d" => ["A", "B", "C", "D"]}},
                "c" => %{"d" => []},
-               "d" => %{}
+               "d" => []
              },
              "b" => %{
                "c" => %{"d" => []},
-               "d" => %{}
+               "d" => []
              },
              "c" => %{"d" => []},
              "d" => []
@@ -44,12 +44,12 @@ defmodule JuiceTest do
     assert Juice.squeeze(map, "* -*") == %{}
   end
 
-  test "can return a subset of keys with dot notation", %{map: map} do
+  test "can nest keys with dot notation", %{map: map} do
     assert Juice.squeeze(map, "a") == %{
              "a" => %{
                "b" => %{"c" => %{"d" => ["A", "B", "C", "D"]}},
                "c" => %{"d" => []},
-               "d" => %{}
+               "d" => []
              }
            }
 
@@ -60,8 +60,31 @@ defmodule JuiceTest do
            }
   end
 
+  test "merges siblings" do
+    map = %{
+      "a" => %{
+        "b" => "B",
+        "c" => "C",
+        "d" => "D"
+      }
+    }
+
+    assert Juice.squeeze(map, "a.b a.c") == %{
+             "a" => %{
+               "b" => "B",
+               "c" => "C"
+             }
+           }
+  end
+
   test "can negate keys", %{map: map} do
     assert Juice.squeeze(map, "a -a") == %{}
     assert Juice.squeeze(map, "a.b -a.b") == %{"a" => %{}}
+
+    assert Juice.squeeze(map, "a -a.b -a.c") == %{
+             "a" => %{
+               "d" => []
+             }
+           }
   end
 end
