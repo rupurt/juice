@@ -13,13 +13,13 @@ defmodule Juice do
   def squeeze(source, expression) when is_list(expression) do
     expression
     |> Enum.reduce(
-      %{},
+      empty_acc(source),
       &eval(source, &1, &2)
     )
   end
 
   defp eval(source, {:+, ["*"]}, _), do: source
-  defp eval(_, {:-, ["*"]}, _), do: %{}
+  defp eval(source, {:-, ["*"]}, _), do: empty_acc(source)
 
   defp eval(source, {:+, key_chain}, acc) do
     key_chain
@@ -31,7 +31,7 @@ defmodule Juice do
     |> reject(acc)
   end
 
-  defp collect([key | []], source, acc) when is_list(source) do
+  defp collect([key | []], source, acc) when is_list(source) and is_list(acc) do
     if Enum.member?(source, key) do
       source_set = MapSet.new(source)
       acc_set = MapSet.new([key | acc])
@@ -42,12 +42,12 @@ defmodule Juice do
     end
   end
 
-  defp collect([key | []], source, acc) when is_map(source) do
+  defp collect([key | []], source, acc) when is_map(source) and is_map(acc) do
     sub_source = Map.get(source, key)
     Map.put(acc, key, sub_source)
   end
 
-  defp collect([key | tail], source, acc) when is_map(source) do
+  defp collect([key | tail], source, acc) when is_map(source) and is_map(acc) do
     sub_source = Map.get(source, key)
     default_acc = empty_acc(sub_source)
     sub_acc = Map.get(acc, key, default_acc)

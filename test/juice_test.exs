@@ -109,4 +109,10 @@ defmodule JuiceTest do
              }
            }
   end
+
+  test "can match on a top level list" do
+    list = ["a", "b", "c", "d"]
+
+    assert Juice.squeeze(list, "a b") == ["a", "b"]
+  end
 end
