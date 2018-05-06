@@ -87,4 +87,26 @@ defmodule JuiceTest do
              }
            }
   end
+
+  test "can match keys in a list", %{map: map} do
+    assert Juice.squeeze(map, "a.b.c.d.A") == %{
+             "a" => %{
+               "b" => %{"c" => %{"d" => ["A"]}}
+             }
+           }
+
+    assert Juice.squeeze(map, "a.b.c.d.A a.b.c.d.B a.b.c.d.C") == %{
+             "a" => %{
+               "b" => %{"c" => %{"d" => ["A", "B", "C"]}}
+             }
+           }
+  end
+
+  test "can negate keys in a list", %{map: map} do
+    assert Juice.squeeze(map, "a.b.c.d.A a.b.c.d.B -a.b.c.d.B") == %{
+             "a" => %{
+               "b" => %{"c" => %{"d" => ["A"]}}
+             }
+           }
+  end
 end
