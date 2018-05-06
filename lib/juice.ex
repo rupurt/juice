@@ -5,33 +5,40 @@ defmodule Juice do
 
   alias Juice.Expression
 
-  def squeeze(enum, query) when is_bitstring(query) do
+  def squeeze(source, query) when is_bitstring(query) do
     expression = Expression.parse(query)
-    squeeze(enum, expression)
+    squeeze(source, expression)
   end
 
-  def squeeze(%{} = source, expression) when is_list(expression) do
+  def squeeze(source, expression) when is_list(expression) do
     expression
-    |> Enum.reduce(%{}, fn operation, acc ->
-      case operation do
-        {:+, ["*"]} -> source
-        {:-, ["*"]} -> %{}
-        {:+, key_chain} -> collect(key_chain, source, acc)
-        {:-, key_chain} -> reject(key_chain, acc)
-      end
-    end)
+    |> Enum.reduce(
+      %{},
+      &eval(source, &1, &2)
+    )
   end
 
-  defp collect([key | []], source, acc) do
-    sub_source = Map.get(source, key)
+  defp eval(source, {:+, ["*"]}, _), do: source
+  defp eval(_, {:-, ["*"]}, _), do: %{}
 
+  defp eval(source, {:+, key_chain}, acc) do
+    key_chain
+    |> collect(source, acc)
+  end
+
+  defp eval(_, {:-, key_chain}, acc) do
+    key_chain
+    |> reject(acc)
+  end
+
+  defp collect([key | []], %{} = source, acc) do
+    sub_source = Map.get(source, key)
     Map.put(acc, key, sub_source)
   end
 
   defp collect([key | tail], source, acc) do
     sub_source = Map.get(source, key)
     sub_acc = collect(tail, sub_source, acc)
-
     Map.put(acc, key, sub_acc)
   end
 
@@ -42,7 +49,6 @@ defmodule Juice do
   defp reject([key | tail], acc) do
     sub_acc = Map.get(acc, key)
     rejected = reject(tail, sub_acc)
-
     Map.put(acc, key, rejected)
   end
 end
