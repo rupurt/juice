@@ -115,4 +115,21 @@ defmodule JuiceTest do
 
     assert Juice.squeeze(list, "a b") == ["a", "b"]
   end
+
+  test "can match symbols" do
+    list = [:a, :b, :c, :d]
+
+    map = %{
+      a: [:alex, :alfred],
+      b: [:ben, :bonnie],
+      c: [:charles, :candy]
+    }
+
+    assert Juice.squeeze(list, "a b") == [:a, :b]
+
+    assert Juice.squeeze(map, "a.alex b.ben") == %{
+             a: [:alex],
+             b: [:ben]
+           }
+  end
 end
