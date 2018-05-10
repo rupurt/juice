@@ -127,9 +127,36 @@ defmodule JuiceTest do
 
     assert Juice.squeeze(list, "a b") == [:a, :b]
 
+    assert Juice.squeeze(map, "a c") == %{
+             a: [:alex, :alfred],
+             c: [:charles, :candy]
+           }
+
     assert Juice.squeeze(map, "a.alex b.ben") == %{
              a: [:alex],
              b: [:ben]
+           }
+  end
+
+  test "ignores keys that aren't present" do
+    list = [:a, :b, :c, :d]
+
+    map = %{
+      a: [:alex, :alfred],
+      b: [:ben, :bonnie],
+      c: %{
+        carrots: 10,
+        cucumbers: 2
+      }
+    }
+
+    assert Juice.squeeze(list, "a z") == [:a]
+
+    assert Juice.squeeze(map, "a z x.y c.carrots c.apples") == %{
+             a: [:alex, :alfred],
+             c: %{
+               carrots: 10
+             }
            }
   end
 end

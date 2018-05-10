@@ -38,23 +38,36 @@ defmodule Juice do
         collect_intersection(key |> String.to_atom(), source, acc)
 
       true ->
-        []
+        acc
     end
   end
 
   defp collect([key | []], source, acc) when is_map(source) and is_map(acc) do
-    sub_source = Map.get(source, key)
-    Map.put(acc, key, sub_source)
+    key
+    |> match(source)
+    |> case do
+      {:ok, {matched_key, matched_value}} ->
+        Map.put(acc, matched_key, matched_value)
+
+      {:error, :not_found} ->
+        acc
+    end
   end
 
   defp collect([key | tail], source, acc) when is_map(source) and is_map(acc) do
-    {matched_key, sub_source} = match(key, source)
+    key
+    |> match(source)
+    |> case do
+      {:ok, {matched_key, sub_source}} ->
+        default_acc = empty_acc(sub_source)
+        sub_acc = Map.get(acc, matched_key, default_acc)
+        collected = collect(tail, sub_source, sub_acc)
 
-    default_acc = empty_acc(sub_source)
-    sub_acc = Map.get(acc, matched_key, default_acc)
-    collected = collect(tail, sub_source, sub_acc)
+        Map.put(acc, matched_key, collected)
 
-    Map.put(acc, matched_key, collected)
+      {:error, :not_found} ->
+        acc
+    end
   end
 
   defp collect_intersection(key, source, acc) do
@@ -71,10 +84,13 @@ defmodule Juice do
 
     cond do
       Map.has_key?(source, atom_key) ->
-        {atom_key, Map.get(source, atom_key)}
+        {:ok, {atom_key, Map.get(source, atom_key)}}
+
+      Map.has_key?(source, key) ->
+        {:ok, {key, Map.get(source, key)}}
 
       true ->
-        {key, Map.get(source, key)}
+        {:error, :not_found}
     end
   end
 
