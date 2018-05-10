@@ -1,4 +1,5 @@
 # Juice
+[![Build Status](https://circleci.com/gh/rupurt/juice.png)](https://circleci.com/gh/rupurt/juice)
 
 Reduce in memory data structures using a lightweight query language
 
