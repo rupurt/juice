@@ -4,7 +4,7 @@ defmodule Juice.MixProject do
   def project do
     [
       app: :juice,
-      version: "0.0.1",
+      version: "0.0.2",
       elixir: "~> 1.6",
       package: package(),
       description: description(),

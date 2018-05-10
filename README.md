@@ -9,7 +9,7 @@ Add `tai` to your list of dependencies in `mix.exs`
 ```elixir
 def deps do
   [
-    {:juice, "~> 0.0.1"}
+    {:juice, "~> 0.0.2"}
   ]
 end
 ```
