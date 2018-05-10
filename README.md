@@ -57,7 +57,8 @@ iex> Juice.squeeze(fruit_basket, "* -plums -mangos") == %{
 		granny_smith: 10,
 		golden_delicious: 3
 	},
-	"oranges" => 5
+	"oranges" => 5,
+	recipients: [:steph, "michael", :lebron, "charles"]
 }
 ```
 
