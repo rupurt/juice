@@ -116,7 +116,7 @@ defmodule JuiceTest do
     assert Juice.squeeze(list, "a b") == ["a", "b"]
   end
 
-  test "can match symbols" do
+  test "can match and reject symbols" do
     list = [:a, :b, :c, :d]
 
     map = %{
@@ -126,6 +126,7 @@ defmodule JuiceTest do
     }
 
     assert Juice.squeeze(list, "a b") == [:a, :b]
+    assert Juice.squeeze(list, "* -a -b") == [:c, :d]
 
     assert Juice.squeeze(map, "a c") == %{
              a: [:alex, :alfred],
@@ -135,6 +136,10 @@ defmodule JuiceTest do
     assert Juice.squeeze(map, "a.alex b.ben") == %{
              a: [:alex],
              b: [:ben]
+           }
+
+    assert Juice.squeeze(map, "* -b -c") == %{
+             a: [:alex, :alfred]
            }
   end
 

@@ -58,10 +58,10 @@ defmodule Juice do
     key
     |> match(source)
     |> case do
-      {:ok, {matched_key, sub_source}} ->
-        default_acc = empty_acc(sub_source)
+      {:ok, {matched_key, matched_value}} ->
+        default_acc = empty_acc(matched_value)
         sub_acc = Map.get(acc, matched_key, default_acc)
-        collected = collect(tail, sub_source, sub_acc)
+        collected = collect(tail, matched_value, sub_acc)
 
         Map.put(acc, matched_key, collected)
 
@@ -97,16 +97,26 @@ defmodule Juice do
   defp reject([key | []], acc) when is_list(acc) do
     acc
     |> List.delete(key)
+    |> List.delete(key |> String.to_atom())
   end
 
   defp reject([key | []], acc) when is_map(acc) do
-    Map.delete(acc, key)
+    acc
+    |> Map.delete(key)
+    |> Map.delete(key |> String.to_atom())
   end
 
   defp reject([key | tail], acc) when is_map(acc) do
-    sub_acc = Map.get(acc, key)
-    rejected = reject(tail, sub_acc)
-    Map.put(acc, key, rejected)
+    key
+    |> match(acc)
+    |> case do
+      {:ok, {matched_key, matched_value}} ->
+        rejected = reject(tail, matched_value)
+        Map.put(acc, matched_key, rejected)
+
+      {:error, :not_found} ->
+        acc
+    end
   end
 
   defp empty_acc(source) when is_map(source), do: %{}
