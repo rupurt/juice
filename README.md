@@ -10,7 +10,7 @@ Add `juice` to your list of dependencies in `mix.exs`
 ```elixir
 def deps do
   [
-    {:juice, "~> 0.0.2"}
+    {:juice, "~> 0.0.3"}
   ]
 end
 ```
