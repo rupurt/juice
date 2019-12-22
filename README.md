@@ -1,5 +1,6 @@
 # Juice
 [![Build Status](https://github.com/rupurt/juice/workflows/.github/workflows/test.yml/badge.svg)](https://github.com/rupurt/juice/actions?query=workflow%3A.github%2Fworkflows%2Ftest.yml)
+[![hex.pm version](https://img.shields.io/hexpm/v/juice.svg?style=flat)](https://hex.pm/packages/juice)
 
 Reduce in memory data structures using a lightweight query language
 
