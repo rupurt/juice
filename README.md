@@ -1,5 +1,5 @@
 # Juice
-[![Build Status](https://circleci.com/gh/rupurt/juice.png)](https://circleci.com/gh/rupurt/juice)
+[![Build Status](https://github.com/rupurt/juice/workflows/.github/workflows/test.yml/badge.svg)](https://github.com/rupurt/juice/actions?query=workflow%3A.github%2Fworkflows%2Ftest.yml)
 
 Reduce in memory data structures using a lightweight query language
 
