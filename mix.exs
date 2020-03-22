@@ -5,7 +5,7 @@ defmodule Juice.MixProject do
     [
       app: :juice,
       version: "0.0.3",
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       package: package(),
       description: description(),
       start_permanent: Mix.env() == :prod,
