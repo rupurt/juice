@@ -1,5 +1,6 @@
 # Juice
-[![Build Status](https://github.com/rupurt/juice/workflows/.github/workflows/test.yml/badge.svg)](https://github.com/rupurt/juice/actions?query=workflow%3A.github%2Fworkflows%2Ftest.yml)
+
+[![Build Status](https://github.com/rupurt/juice/workflows/test/badge.svg?branch=master)](https://github.com/rupurt/juice/actions?query=workflow%3Atest)
 [![hex.pm version](https://img.shields.io/hexpm/v/juice.svg?style=flat)](https://hex.pm/packages/juice)
 
 Reduce in memory data structures using a lightweight query language
@@ -10,9 +11,7 @@ Add `juice` to your list of dependencies in `mix.exs`
 
 ```elixir
 def deps do
-  [
-    {:juice, "~> 0.0.3"}
-  ]
+  [{:juice, "~> 0.0.3"}]
 end
 ```
 
